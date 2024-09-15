@@ -1,0 +1,25 @@
+{
+    "info": {
+      "name": "Coupons API Test",
+      "description": "Test for /coupons_poc API",
+      "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+    },
+    "item": [
+      {
+        "name": "GET /coupons_poc",
+        "request": {
+          "method": "GET",
+          "header": [],
+          "url": {
+            "raw": "http://localhost:4566/restapis/{api_id}/prod/_user_request_/coupons_poc",
+            "protocol": "http",
+            "host": ["localhost"],
+            "port": "4566",
+            "path": ["restapis", "{api_id}", "prod", "_user_request_", "coupons_poc"]
+          }
+        },
+        "response": []
+      }
+    ]
+  }
+  
