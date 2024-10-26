@@ -68,10 +68,12 @@ cd $PROJECT_DIR
 echo "Creating coupons_get_by_id function"
 awslocal lambda create-function \
     --function-name "coupons_get_by_id" \
-    --runtime "nodejs14.x" \
+    --runtime "nodejs18.x" \
     --zip-file fileb://coupons_get_by_id.zip \
     --handler "index.handler" \
-    --role "coupons_production_role"
+    --role "arn:aws:iam::000000000000:role/coupons_production_role" \
+    --memory-size 128
+    
 [ $? == 0 ] || fail 3 "Failed to create function"
 echo "coupons_get_by_id function created successfully"
 
@@ -89,10 +91,11 @@ cd $PROJECT_DIR
 echo "Creating coupons_update function"
 awslocal lambda create-function \
     --function-name "coupons_update" \
-    --runtime "nodejs14.x" \
+    --runtime "nodejs18.x" \
     --zip-file fileb://coupons_update.zip \
     --handler "index.handler" \
-    --role "coupons_production_role"
+    --role "arn:aws:iam::000000000000:role/coupons_production_role" \
+    --memory-size 128
 [ $? == 0 ] || fail 3 "Failed to create function"
 echo "coupons_get_by_id function created successfully"
 
@@ -110,10 +113,11 @@ cd $PROJECT_DIR
 echo "Creating coupons_get_token function"
 awslocal lambda create-function \
     --function-name "coupons_get_token" \
-    --runtime "nodejs14.x" \
+    --runtime "nodejs18.x" \
     --zip-file fileb://coupons_get_token.zip \
     --handler "index.handler" \
-    --role "coupons_production_role"
+    --role "arn:aws:iam::000000000000:role/coupons_production_role" \
+    --memory-size 128
 [ $? == 0 ] || fail 3 "Failed to create function"
 echo "coupons_get_token function created successfully"
 
@@ -131,10 +135,11 @@ cd $PROJECT_DIR
 echo "Creating coupons_to_secure function"
 awslocal lambda create-function \
     --function-name "coupons_to_secure" \
-    --runtime "nodejs14.x" \
+    --runtime "nodejs18.x" \
     --zip-file fileb://coupons_to_secure.zip \
     --handler "index.handler" \
-    --role "coupons_production_role"
+    --role "arn:aws:iam::000000000000:role/coupons_production_role" \
+    --memory-size 128
 [ $? == 0 ] || fail 3 "Failed to create function"
 echo "coupons_to_secure function created successfully"
 
@@ -152,10 +157,11 @@ cd $PROJECT_DIR
 echo "Creating coupons_import function"
 awslocal lambda create-function \
     --function-name "coupons_import" \
-    --runtime "nodejs14.x" \
+    --runtime "nodejs18.x" \
     --zip-file fileb://coupons_import.zip \
     --handler "index.handler" \
-    --role "coupons_production_role"
+    --role "arn:aws:iam::000000000000:role/coupons_production_role" \
+    --memory-size 128
 [ $? == 0 ] || fail 3 "Failed to create function"
 echo "coupons_import function created successfully"
 
@@ -173,10 +179,12 @@ cd $PROJECT_DIR
 echo "Creating coupons_import_presigned_url function"
 awslocal lambda create-function \
     --function-name "coupons_import_presigned_url" \
-    --runtime "nodejs14.x" \
+    --runtime "nodejs18.x" \
     --zip-file fileb://coupons_import_presigned_url.zip \
     --handler "index.handler" \
-    --role "coupons_production_role"
+    --role "arn:aws:iam::000000000000:role/coupons_production_role" \
+    --memory-size 128
+
 [ $? == 0 ] || fail 3 "Failed to create function"
 echo "coupons_import_presigned_url function created successfully"
 
@@ -194,10 +202,11 @@ cd $PROJECT_DIR
 echo "Creating coupons_event_publisher function"
 awslocal lambda create-function \
     --function-name "coupons_event_publisher" \
-    --runtime "nodejs14.x" \
+    --runtime "nodejs18.x" \
     --zip-file fileb://coupons_event_publisher.zip \
     --handler "index.handler" \
-    --role "coupons_production_role"
+    --role "arn:aws:iam::000000000000:role/coupons_production_role" \
+    --memory-size 128
 [ $? == 0 ] || fail 3 "Failed to create function"
 echo "coupons_event_publisher function created successfully"
 
@@ -215,10 +224,12 @@ cd $PROJECT_DIR
 echo "Creating coupons_notification_sender function"
 awslocal lambda create-function \
     --function-name "coupons_notification_sender" \
-    --runtime "nodejs14.x" \
+    --runtime "nodejs18.x" \
     --zip-file fileb://coupons_notification_sender.zip \
     --handler "index.handler" \
-    --role "coupons_production_role"
+    --role "arn:aws:iam::000000000000:role/coupons_production_role" \
+    --memory-size 128
+    
 [ $? == 0 ] || fail 3 "Failed to create function"
 echo "coupons_notification_sender function created successfully"
 
