@@ -1,3 +1,5 @@
+# Type: AWS Lambda Function
+
 import json
 import jwt
 import os

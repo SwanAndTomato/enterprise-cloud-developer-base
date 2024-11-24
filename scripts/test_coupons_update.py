@@ -1,6 +1,6 @@
 import json
 from unittest.mock import patch
-import lambda_function_update
+from .. import lambda_function_update
 
 @patch('lambda_function_update.table.update_item')
 def test_lambda_handler(mock_update_item):
