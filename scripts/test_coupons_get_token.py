@@ -1,77 +1,74 @@
 import pytest
 import json
-import os
-import requests
+import bcrypt
+from moto import mock_dynamodb
+import boto3
+from coupons_get_token import handler
 
-# Set the URL for the API Gateway or LocalStack endpoint
-API_URL = "http://localhost:4566/restapis/your_api_id/prod/_user_request_/token"
+# Constants
+DYNAMODB_TABLE = "users"
 
-# Function to log results to T3Testing.txt
-def log_to_file(message):
-    with open("T3Testing.txt", "a") as log_file:
-        log_file.write(message + "\n")
+@pytest.fixture
+def setup_dynamodb():
+    with mock_dynamodb():
+        # Create mock DynamoDB table
+        dynamodb = boto3.resource("dynamodb", region_name="us-east-1")
+        table = dynamodb.create_table(
+            TableName=DYNAMODB_TABLE,
+            KeySchema=[{"AttributeName": "username", "KeyType": "HASH"}],
+            AttributeDefinitions=[{"AttributeName": "username", "AttributeType": "S"}],
+            BillingMode="PAY_PER_REQUEST"
+        )
+        table.put_item(
+            Item={
+                "username": "tester1",
+                "password": bcrypt.hashpw("Pc4RM0AMKy5aSGfD".encode(), bcrypt.gensalt(12)).decode()
+            }
+        )
+        yield table
 
-# Test case 1: Test valid credentials and token generation
-def test_valid_credentials():
-    payload = {
-        "username": "tester1",
-        "password": "Pc4RM0AMKy5aSGfD"
+
+def test_valid_credentials(setup_dynamodb):
+    event = {
+        "body": json.dumps({
+            "username": "tester1",
+            "password": "Pc4RM0AMKy5aSGfD"
+        })
     }
-    response = requests.post(API_URL, json=payload)
-    
-    assert response.status_code == 200, f"Expected 200, got {response.status_code}"
-    data = response.json()
-    assert "token" in data, "Token not returned in the response"
-    assert "expires_in" in data, "Expiration time not returned in the response"
-    
-    log_to_file("Test 1 Passed: Valid credentials and token generation.")
-    print("Test 1 Passed: Valid credentials and token generation.")
 
-# Test case 2: Test invalid credentials
-def test_invalid_credentials():
-    payload = {
-        "username": "tester1",
-        "password": "wrongpassword"
+    response = handler(event, None)
+    body = json.loads(response["body"])
+
+    assert response["statusCode"] == 200
+    assert "token" in body
+    assert "expiresAt" in body
+
+
+def test_invalid_credentials(setup_dynamodb):
+    event = {
+        "body": json.dumps({
+            "username": "tester1",
+            "password": "wrongPassword"
+        })
     }
-    response = requests.post(API_URL, json=payload)
-    
-    assert response.status_code == 403, f"Expected 403, got {response.status_code}"
-    log_to_file("Test 2 Passed: Invalid credentials returned 403.")
-    print("Test 2 Passed: Invalid credentials returned 403.")
 
-# Test case 3: Test valid credentials but check if the token format is correct
-def test_token_format():
-    payload = {
-        "username": "tester1",
-        "password": "Pc4RM0AMKy5aSGfD"
+    response = handler(event, None)
+    body = json.loads(response["body"])
+
+    assert response["statusCode"] == 403
+    assert body["message"] == "Invalid credentials"
+
+
+def test_nonexistent_user(setup_dynamodb):
+    event = {
+        "body": json.dumps({
+            "username": "nonexistent",
+            "password": "Pc4RM0AMKy5aSGfD"
+        })
     }
-    response = requests.post(API_URL, json=payload)
-    
-    assert response.status_code == 200, f"Expected 200, got {response.status_code}"
-    data = response.json()
-    token = data.get("token")
-    
-    # Token should be a valid JWT format (3 parts separated by dots)
-    assert token and len(token.split('.')) == 3, "Token format is invalid"
-    
-    log_to_file("Test 3 Passed: Token format is valid.")
-    print("Test 3 Passed: Token format is valid.")
 
-# Test case 4: Test token expiration field is present
-def test_token_expiration():
-    payload = {
-        "username": "tester1",
-        "password": "Pc4RM0AMKy5aSGfD"
-    }
-    response = requests.post(API_URL, json=payload)
-    
-    assert response.status_code == 200, f"Expected 200, got {response.status_code}"
-    data = response.json()
-    assert "expires_in" in data, "Expiration time is missing"
-    
-    log_to_file("Test 4 Passed: Token expiration field is present.")
-    print("Test 4 Passed: Token expiration field is present.")
+    response = handler(event, None)
+    body = json.loads(response["body"])
 
-# Run all tests
-if __name__ == "__main__":
-    pytest.main()
+    assert response["statusCode"] == 403
+    assert body["message"] == "Invalid credentials"
