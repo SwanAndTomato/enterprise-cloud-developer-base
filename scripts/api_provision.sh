@@ -5,6 +5,11 @@ API_BASE_URL="http://localhost:4566"
 REGION="us-east-1"
 STAGE="local"
 
+fail() {
+  echo "Error: $2"
+  exit $1
+}
+
 echo "Creating REST API"
 awslocal apigateway create-rest-api \
   --region us-east-1 \

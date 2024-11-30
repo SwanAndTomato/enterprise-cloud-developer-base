@@ -233,6 +233,7 @@ awslocal lambda create-function \
 [ $? == 0 ] || fail 3 "Failed to create function"
 echo "coupons_notification_sender function created successfully"
 
+' 
 echo "Creating REST API"
 awslocal apigateway create-rest-api \
   --region us-east-1 \
@@ -241,7 +242,7 @@ awslocal apigateway create-rest-api \
 [ $? == 0 ] || fail 1 "Failed to create Api"
 
 echo "Retrieving Api id"
-API_ID=$(awslocal apigateway get-rest-apis --region ${REGION} --query "items[?name==\`${API_NAME}\`].id" --output text)
+API_ID=$(awslocal apigateway get-rest-apis --region ${REGION} --query "items[0].id" --output text)
 [ $? == 0 ] || fail 2 "Failed to retrieve Api id"
 echo "Api id ${API_ID}"
 
