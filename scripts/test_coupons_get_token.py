@@ -1,7 +1,7 @@
 import pytest
 import json
 import bcrypt
-from moto import mock_dynamodb2
+from moto import mock_aws
 import boto3
 from coupons_get_token import handler
 
@@ -10,7 +10,7 @@ DYNAMODB_TABLE = "users"
 
 @pytest.fixture
 def setup_dynamodb():
-    with mock_dynamodb2():
+    with mock_aws():
         # Create mock DynamoDB table
         dynamodb = boto3.resource("dynamodb", region_name="us-east-1")
         table = dynamodb.create_table(
