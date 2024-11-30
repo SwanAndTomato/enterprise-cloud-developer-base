@@ -6,4 +6,4 @@ role_arn=$(aws --endpoint-url=http://localhost:4566 iam get-role --role-name cou
 # Update the Lambda function to retrieve coupon by id
 aws --endpoint-url=http://localhost:4566 lambda update-function-code \
     --function-name coupons_get_by_id \
-    --zip-file fileb://coupons_get_by_id_lambda.zip
+    --zip-file fileb://coupons_get_by_id.zip

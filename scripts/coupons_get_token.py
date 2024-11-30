@@ -33,7 +33,7 @@ def handler(event, context):
             }
 
         # Generate JWT token
-        expiration_time = datetime.utcnow() + timedelta(hours=1)
+        expiration_time = datetime.now(datetime.timezone.utc) + timedelta(hours=1)
         token = jwt.encode(
             {"username": username, "exp": expiration_time},
             SECRET,
